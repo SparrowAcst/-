@@ -20,17 +20,21 @@ const app = express();
 app.use(morgan('combined'))
 
 app.use('/', async(req, res) => {
-	let client = await mongo.connect(process.env.ATLAS_URL, {
-	    useNewUrlParser: true,
-	    useUnifiedTopology: true
-	 })
-	
-	let result = await	client
-						.db("sparrow-dev")
-						.collection("app-grant")
-						.aggregate([{$match:{}}])
-						.toArray()
-	res.send(result)					
+	try {
+		let client = await mongo.connect(process.env.ATLAS_URL, {
+		    useNewUrlParser: true,
+		    useUnifiedTopology: true
+		 })
+		
+		let result = await	client
+							.db("sparrow-dev")
+							.collection("app-grant")
+							.aggregate([{$match:{}}])
+							.toArray()
+		res.send(result)
+	} catch(e) {
+		res.send(e.toString())
+	}						
 })
 
 app.listen(process.env.PORT, () => {
