@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express');
+const morgan = require('morgan')
 const mongo = require('mongodb').MongoClient 
 
 const getEnv = () => {
@@ -15,6 +16,8 @@ const getEnv = () => {
 console.log(getEnv())
 
 const app = express();
+
+app.use(morgan('combined'))
 
 app.use('/', async(req, res) => {
 	let client = await mongo.connect(process.env.ATLAS_URL, {
